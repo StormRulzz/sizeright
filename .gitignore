@@ -1,0 +1,6 @@
+__pycache__/
+*.aab
+*.apk
+*.keystore
+signing*
+

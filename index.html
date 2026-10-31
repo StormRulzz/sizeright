@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e1116">
+<meta name="description" content="Position size calculator for stocks, crypto, forex and futures. Offline, no ads, no account.">
+<title>SizeRight</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="bar">
+  <h1>Size<span>Right</span></h1>
+  <button id="reset" class="ghost" type="button">Reset</button>
+</header>
+
+<main>
+  <nav class="tabs" id="assetTabs" role="tablist">
+    <button data-asset="stock" role="tab">Stocks</button>
+    <button data-asset="crypto" role="tab">Crypto</button>
+    <button data-asset="forex" role="tab">Forex</button>
+    <button data-asset="futures" role="tab">Futures</button>
+  </nav>
+
+  <section class="card result" aria-live="polite">
+    <div class="big">
+      <span class="label">Position size</span>
+      <span id="qty" class="qty">—</span>
+      <span id="unit" class="unit"></span>
+      <span id="side" class="side"></span>
+    </div>
+    <div class="grid" id="stats"></div>
+    <ul id="msgs" class="msgs"></ul>
+    <button id="copy" class="ghost small" type="button" hidden>Copy summary</button>
+  </section>
+
+  <form id="form" class="card" autocomplete="off" novalidate>
+    <label>Account balance
+      <input id="balance" inputmode="decimal" placeholder="10000">
+    </label>
+
+    <div class="row">
+      <label class="grow">Risk per trade
+        <input id="risk" inputmode="decimal" placeholder="1">
+      </label>
+      <div class="seg" id="riskMode">
+        <button type="button" data-mode="pct">%</button>
+        <button type="button" data-mode="usd">$</button>
+      </div>
+    </div>
+
+    <div class="row two">
+      <label>Entry
+        <input id="entry" inputmode="decimal" placeholder="50.00">
+      </label>
+      <label>Stop loss
+        <input id="stop" inputmode="decimal" placeholder="48.00">
+      </label>
+    </div>
+
+    <label>Target <span class="opt">optional</span>
+      <input id="target" inputmode="decimal" placeholder="56.00">
+    </label>
+
+    <div id="futuresBox" class="row two" hidden>
+      <label>Contract
+        <select id="contract"></select>
+      </label>
+      <label>$ per 1.0 point
+        <input id="pointValue" inputmode="decimal" placeholder="50">
+      </label>
+    </div>
+
+    <div id="cryptoBox" hidden>
+      <label>Quantity step
+        <select id="step">
+          <option value="1">1</option>
+          <option value="0.1">0.1</option>
+          <option value="0.01">0.01</option>
+          <option value="0.001">0.001</option>
+          <option value="0.0001">0.0001</option>
+          <option value="0.00001">0.00001</option>
+          <option value="0.000001">0.000001</option>
+        </select>
+      </label>
+    </div>
+
+    <label><span id="feeLabel">Fee per side (%)</span> <span class="opt">optional</span>
+      <input id="fee" inputmode="decimal" placeholder="0.1">
+    </label>
+
+    <p id="forexNote" class="note" hidden>Assumes the pair's quote currency is your account currency (e.g. EUR/USD on a USD account).</p>
+  </form>
+
+  <p class="foot">Works offline · No ads · No tracking · Not financial advice</p>
+</main>
+
+<script src="calc.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

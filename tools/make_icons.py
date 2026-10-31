@@ -41,7 +41,8 @@ def shapes(inset):
     ]
 
 
-def render(size, maskable):
+def render(size, maskable, logo=False):
+    """maskable: full-bleed background. logo: shapes only on transparency (for @capacitor/assets)."""
     n = size * SS
     inset = 0.14 if maskable else 0.0
     fg = shapes(inset)
@@ -60,11 +61,13 @@ def render(size, maskable):
                         inside = rrect(x, y, 0.0, 0.0, 1.0, 1.0, 0.22)
                     if not inside:
                         continue
-                    col = BG
+                    col = None if logo else BG
                     for c, (x0, y0, x1, y1, r) in fg:
                         if rrect(x, y, x0, y0, x1, y1, r):
                             col = c
                             break
+                    if col is None:
+                        continue
                     acc[0] += col[0]
                     acc[1] += col[1]
                     acc[2] += col[2]
@@ -96,3 +99,11 @@ if __name__ == "__main__":
                                  ("maskable-512.png", 512, True)]:
         (OUT / name).write_bytes(render(size, maskable))
         print("wrote", OUT / name)
+
+    # Source for `npx capacitor-assets generate` (native app icons + splash screens).
+    assets = OUT.parent / "assets"
+    assets.mkdir(exist_ok=True)
+    SS = 2
+    (assets / "logo.png").write_bytes(render(1024, True, logo=True))
+    (assets / "icon-only.png").write_bytes(render(1024, True))  # opaque, full bleed (App Store rule)
+    print("wrote", assets / "logo.png", "and icon-only.png")

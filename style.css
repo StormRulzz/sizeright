@@ -92,4 +92,5 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 
 .note { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
 .foot { text-align: center; color: var(--muted); font-size: 12px; margin-top: 18px; }
+.foot a { color: inherit; }
 [hidden] { display: none !important; }

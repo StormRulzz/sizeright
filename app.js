@@ -4,6 +4,10 @@
   const FIELDS = ['balance', 'risk', 'entry', 'stop', 'target', 'fee', 'pointValue', 'step', 'contract'];
   const KEY = 'sizeright.v1';
 
+  // Native plugins exist only inside the Capacitor app; the website falls back gracefully.
+  const native = window.Capacitor?.isNativePlatform?.() ? window.Capacitor.Plugins : null;
+  const tap = () => { native?.Haptics?.impact({ style: 'LIGHT' }).catch(() => {}); };
+
   // Per-asset inputs are kept separately so switching tabs doesn't wipe prices.
   const defaults = () => ({
     asset: 'stock', riskMode: 'pct', shared: { balance: '', risk: '1' },
@@ -167,6 +171,7 @@
   $('assetTabs').addEventListener('click', (e) => {
     const a = e.target.closest('button')?.dataset.asset;
     if (!a) return;
+    tap();
     state.asset = a;
     save(); render();
   });
@@ -174,6 +179,7 @@
   $('riskMode').addEventListener('click', (e) => {
     const m = e.target.closest('button')?.dataset.mode;
     if (!m || m === state.riskMode) return;
+    tap();
     state.riskMode = m;
     state.shared.risk = '';
     save(); render();
@@ -181,6 +187,7 @@
   });
 
   $('reset').addEventListener('click', () => {
+    tap();
     const keepBalance = state.shared.balance;
     const p = state.perAsset[state.asset];
     p.entry = p.stop = p.target = '';
@@ -189,7 +196,13 @@
     $('entry').focus();
   });
 
+  if (native?.Share) $('copy').textContent = 'Share summary';
   $('copy').addEventListener('click', async () => {
+    if (native?.Share) {
+      tap();
+      native.Share.share({ title: 'SizeRight trade plan', text: lastSummary }).catch(() => {});
+      return;
+    }
     try {
       await navigator.clipboard.writeText(lastSummary);
       $('copy').textContent = 'Copied ✓';
@@ -201,7 +214,7 @@
 
   render();
 
-  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  if (!native && 'serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 })();

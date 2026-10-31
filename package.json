@@ -1,0 +1,23 @@
+{
+  "name": "sizeright",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Position size calculator for stocks, crypto, forex and futures.",
+  "scripts": {
+    "build": "node tools/build-www.js",
+    "test": "node --test test/calc.test.js",
+    "sync": "npm run build && npx cap sync",
+    "icons": "python tools/make_icons.py && capacitor-assets generate --iconBackgroundColor #0e1116 --iconBackgroundColorDark #0e1116 --splashBackgroundColor #0e1116 --splashBackgroundColorDark #0e1116 --logoSplashScale 0.25 --android --ios && node -e \"require('fs').copyFileSync('assets/icon-only.png','ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png')\""
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.0",
+    "@capacitor/core": "8.6.0",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/ios": "8.6.0",
+    "@capacitor/share": "8.0.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "4.0.0",
+    "@capacitor/cli": "8.6.0"
+  }
+}
